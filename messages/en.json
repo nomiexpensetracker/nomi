@@ -1,0 +1,11 @@
+{
+  "app/auth/login": {
+    "title": "Login to Your Account",
+    "description": "Enter your email below to login to your account",
+    "email_placeholder": "Email Address",
+    "password_placeholder": "Password",
+    "login_button": "Login",
+    "forgot_password": "Forgot Password?",
+    "no_account": "Don't have an account? Sign up here."
+  }
+}

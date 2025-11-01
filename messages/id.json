@@ -1,0 +1,11 @@
+{
+  "app/auth/login": {
+    "title": "Masuk ke Akun Anda",
+    "description": "Masukkan email Anda di bawah untuk masuk ke akun Anda",
+    "email_placeholder": "Alamat Email",
+    "password_placeholder": "Kata Sandi",
+    "login_button": "Masuk",
+    "forgot_password": "Lupa Kata Sandi?",
+    "no_account": "Belum punya akun? Daftar di sini."
+  }
+}

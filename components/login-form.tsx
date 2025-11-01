@@ -16,12 +16,15 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useToast } from "@/lib/hooks/use-toast";
+import { useTranslations } from "next-intl";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  const t = useTranslations('app/auth/login');
   const { toast } = useToast();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -59,9 +62,9 @@ export function LoginForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardTitle className="text-2xl">{t('title')}</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            {t('description')}
           </CardDescription>
         </CardHeader>
         <CardContent>
