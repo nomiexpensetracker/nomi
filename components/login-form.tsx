@@ -15,11 +15,13 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useToast } from "@/lib/hooks/use-toast";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +43,13 @@ export function LoginForm({
       // Update this route to redirect to an authenticated route. The user already has an active session.
       router.push("/protected");
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
+      // setError(error instanceof Error ? error.message : "An error occurred");
+      toast({
+        title: "Login failed",
+        description:
+          error instanceof Error ? error.message : "An error occurred",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
