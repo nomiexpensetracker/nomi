@@ -1,0 +1,99 @@
+'use client';
+
+import React, { useState } from 'react';
+import { Mail } from 'lucide-react';
+
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { toast } from '@/lib/hooks/use-toast';
+
+const UpdatePassword: React.FC = () => {
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      toast({
+        title: "Failed",
+        variant: "destructive",
+        description: "Password should be match",
+      })
+    } else {
+      setIsLoading(true);
+      // Simulate API call delay
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1500);
+    }
+  };
+
+  return (
+    <div className="min-h-dvh bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col justify-center py-4 px-6">
+      <div className="max-w-md w-full mx-auto space-y-8">
+        <div className="text-center">
+          <div className="mx-auto w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center mb-4">
+            <Mail className="w-6 h-6 text-white" />
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900">Reset Your Password</h1>
+          <p className="text-gray-600 mt-2">
+            Please enter your new password below.
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <Label htmlFor="password">New password</Label>
+            <div className="relative mt-1">
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="pl-10"
+                placeholder="Enter your new password"
+                required
+              />
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="confirm">Confirm password</Label>
+            <div className="relative mt-1">
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input
+                id="confirm"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="pl-10"
+                placeholder="Confirm your new password"
+                required
+              />
+            </div>
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                Saving...
+              </div>
+            ) : (
+              'Reset Password'
+            )}
+          </Button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default UpdatePassword;

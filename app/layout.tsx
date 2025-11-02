@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Mona_Sans } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import {NextIntlClientProvider} from 'next-intl';
 
 import { Toaster } from "@/components/ui/toaster";
+import MobileOnlyScreen from "@/components/mobile-only-screen";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ViewportProvider } from "@/lib/contexts/viewport-provider";
 
 import "./globals.css";
 
@@ -14,12 +16,12 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Next.js and Supabase Starter Kit",
-  description: "The fastest way to build apps with Next.js and Supabase",
+  title: "Spendly - Family Expense Tracker",
+  description: "",
 };
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const geistSans = Mona_Sans({
+  variable: "--font-mona-sans",
   display: "swap",
   subsets: ["latin"],
 });
@@ -32,19 +34,18 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.className} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <NextIntlClientProvider>
-            <TooltipProvider>
-              <Toaster />
-              {children}
-            </TooltipProvider>
-          </NextIntlClientProvider>
-        </ThemeProvider>
+        <ViewportProvider>
+          <MobileOnlyScreen>
+            <ThemeProvider>
+              <NextIntlClientProvider>
+                <TooltipProvider>
+                  <Toaster />
+                  {children}
+                </TooltipProvider>
+              </NextIntlClientProvider>
+            </ThemeProvider>
+          </MobileOnlyScreen>
+        </ViewportProvider>
       </body>
     </html>
   );
