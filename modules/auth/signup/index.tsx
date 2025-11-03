@@ -2,19 +2,61 @@
 
 import Link from 'next/link';
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
 
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
+import { toast } from '@/lib/hooks/use-toast';
+import { createClient } from "@/lib/supabase/client";
+
+import { Input } from '@/components/atoms/input';
+import { Label } from '@/components/atoms/label';
+import { Button } from '@/components/atoms/button';
 
 const SignUp: React.FC = () => {
+  const router = useRouter();
+
   const [email, setEmail] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [repeatPassword, setRepeatPassword] = useState("");
+
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const supabase = createClient();
+    setIsLoading(true);
+    setError(null);
+
+    if (password !== repeatPassword) {
+      setError("Passwords do not match");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/protected`,
+        },
+      });
+      if (error) throw error;
+      router.push("/auth/sign-up-success");
+    } catch (error: unknown) {
+      toast({
+        title: "Login failed",
+        description:
+          error instanceof Error ? error.message : "An error occurred",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -110,7 +152,32 @@ const SignUp: React.FC = () => {
                     </button>
                   </div>
                 </div>
+
+                <div>
+                  <Label htmlFor="repeat-password">Repeat Password</Label>
+                  <div className="relative mt-1">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      id="repeat-password"
+                      type={showPassword ? 'text' : 'password'}
+                      value={repeatPassword}
+                      onChange={(e) => setRepeatPassword(e.target.value)}
+                      className="pl-10 pr-10"
+                      placeholder="Repeat your password"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
               </div>
+
+              {error && <p className="text-sm text-red-500">{error}</p>}
 
               <Button
                 type="submit"
@@ -134,7 +201,6 @@ const SignUp: React.FC = () => {
             </div>
           </>
         )}
-
       </div>
     </div>
   );

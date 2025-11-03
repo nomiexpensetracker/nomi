@@ -1,10 +1,12 @@
 "use client";
 
-import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
-export function LogoutButton() {
+import { createClient } from "@/lib/supabase/client";
+
+import { Button } from "@/components/atoms/button";
+
+const LogoutButton: React.FC = () => {
   const router = useRouter();
 
   const logout = async () => {
@@ -14,4 +16,6 @@ export function LogoutButton() {
   };
 
   return <Button onClick={logout}>Logout</Button>;
-}
+};
+
+export default LogoutButton;

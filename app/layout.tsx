@@ -3,9 +3,9 @@ import { Mona_Sans } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import {NextIntlClientProvider} from 'next-intl';
 
-import { Toaster } from "@/components/ui/toaster";
-import MobileOnlyScreen from "@/components/mobile-only-screen";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@/components/atoms/toaster";
+import MobileOnlyScreen from "@/components/organisms/mobile-only-screen";
+import { TooltipProvider } from "@/components/atoms/tooltip";
 import { ViewportProvider } from "@/lib/contexts/viewport-provider";
 
 import "./globals.css";

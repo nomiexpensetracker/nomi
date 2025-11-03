@@ -1,33 +1,39 @@
 'use client';
 
-import React, { useState } from 'react';
 import { Mail } from 'lucide-react';
+import { useRouter } from "next/navigation";
+import React, { useState } from 'react';
 
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
 import { toast } from '@/lib/hooks/use-toast';
+import { createClient } from "@/lib/supabase/client";
+
+import { Input } from '@/components/atoms/input';
+import { Label } from '@/components/atoms/label';
+import { Button } from '@/components/atoms/button';
 
 const UpdatePassword: React.FC = () => {
+  const router = useRouter();
+
+  const [error, setError] = useState<string | null>(null);
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const supabase = createClient();
+    setIsLoading(true);
+    setError(null);
 
-    if (password !== confirmPassword) {
-      toast({
-        title: "Failed",
-        variant: "destructive",
-        description: "Password should be match",
-      })
-    } else {
-      setIsLoading(true);
-      // Simulate API call delay
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1500);
+    try {
+      const { error } = await supabase.auth.updateUser({ password });
+      if (error) throw error;
+      // Update this route to redirect to an authenticated route. The user already has an active session.
+      router.push("/protected");
+    } catch (error: unknown) {
+      setError(error instanceof Error ? error.message : "An error occurred");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -75,6 +81,8 @@ const UpdatePassword: React.FC = () => {
               />
             </div>
           </div>
+
+          {error && <p className="text-sm text-red-500">{error}</p>}
 
           <Button
             type="submit"

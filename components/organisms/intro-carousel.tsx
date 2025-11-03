@@ -17,8 +17,6 @@ const IntroCarousel: React.FC<IntroCarouselProps> = ({ onComplete }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [progress, setProgress] = useState(0);
 
-  console.log('currentSlide', currentSlide);
-
   const slides: IntroSlide[] = [
     {
       id: 1,

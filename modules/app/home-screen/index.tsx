@@ -1,6 +1,6 @@
 'use client'
 
-import IntroCarousel from '@/components/intro-carousel';
+import IntroCarousel from '@/components/organisms/intro-carousel';
 import { useAppIntro } from '@/lib/hooks/use-intro';
 
 const HomeScreen: React.FC = () => {

@@ -1,30 +1,50 @@
 'use client'
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+
+import { toast } from '@/lib/hooks/use-toast';
+import { createClient } from "@/lib/supabase/client";
+
+import { Label } from '@/components/atoms/label';
+import { Input } from '@/components/atoms/input';
+import { Button } from '@/components/atoms/button';
 
 const Login: React.FC = () => {
+  const router = useRouter();
+
   const [email, setEmail] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email && password) {
-      setIsLoading(true);
-      
-      //! TODO: Implement actual login logic here
-      console.log('Logging in with', { email, password });
+    const supabase = createClient();
+    setIsLoading(true);
+    setError(null);
 
-      // Simulate a network request
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 2000);
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) throw error;
+      // Update this route to redirect to an authenticated route. The user already has an active session.
+      router.push("/protected");
+    } catch (error: unknown) {
+      // setError(error instanceof Error ? error.message : "An error occurred");
+      toast({
+        title: "Login failed",
+        description:
+          error instanceof Error ? error.message : "An error occurred",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -78,6 +98,7 @@ const Login: React.FC = () => {
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
+              {error && <p className="text-sm text-red-500">{error}</p>}
             </div>
           </div>
 
