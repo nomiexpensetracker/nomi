@@ -2,13 +2,14 @@
 
 import { Smartphone, Monitor } from 'lucide-react';
 
+import LoadingScreen from '@/components/organisms/loading-screen';
 import { useIsDesktop } from '@/lib/contexts/viewport-provider';
 
 const MobileOnlyScreen: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isDesktop, isLoading } = useIsDesktop();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingScreen />
   }
 
   if (isDesktop) {

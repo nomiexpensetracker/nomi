@@ -4,7 +4,7 @@ import { ThemeProvider } from "next-themes";
 import {NextIntlClientProvider} from 'next-intl';
 
 import { Toaster } from "@/components/atoms/toaster";
-import MobileOnlyScreen from "@/components/organisms/mobile-only-screen";
+import MobileOnlyScreen from "@/components/molecules/mobile-only-screen";
 import { TooltipProvider } from "@/components/atoms/tooltip";
 import { ViewportProvider } from "@/lib/contexts/viewport-provider";
 
