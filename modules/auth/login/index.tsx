@@ -1,8 +1,8 @@
 'use client'
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import { useRouter, redirect } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 
 import { toast } from '@/lib/hooks/use-toast';
@@ -20,6 +20,15 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  const handleCheckUserLoggedIn = async () => {
+    const supabase = createClient();
+  
+    const { data } = await supabase.auth.getClaims();
+    if (data?.claims) {
+      redirect("/app");
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,6 +56,10 @@ const Login: React.FC = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    handleCheckUserLoggedIn()
+  }, [])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col justify-center py-4 px-6">

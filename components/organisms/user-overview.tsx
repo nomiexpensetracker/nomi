@@ -1,14 +1,16 @@
 import React from 'react';
 import { Bell, Wallet, LogOut } from 'lucide-react';
+
 import { Button } from '@/components/atoms/button';
 
 interface UserOverviewProps {
   userName: string;
   totalAmount: number;
+  onLogout: () => void;
   onViewDetail: () => void;
 }
 
-const UserOverview: React.FC<UserOverviewProps> = ({ userName, totalAmount, onViewDetail }) => {
+const UserOverview: React.FC<UserOverviewProps> = ({ userName, totalAmount, onLogout, onViewDetail }) => {
   const getGreeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) return 'Good morning';
@@ -27,9 +29,7 @@ const UserOverview: React.FC<UserOverviewProps> = ({ userName, totalAmount, onVi
           <button className="p-2 hover:bg-white/10 rounded-lg transition-colors">
             <Bell size={20} />
           </button>
-          <button
-            className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-          >
+          <button className="p-2 hover:bg-white/10 rounded-lg transition-colors" onClick={onLogout}>
             <LogOut size={20} />
           </button>
         </div>

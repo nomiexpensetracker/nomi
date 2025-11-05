@@ -1,20 +1,31 @@
 'use client'
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAppIntro } from '@/lib/hooks/use-intro';
 
-import IntroCarousel from '@/components/organisms/intro-carousel';
-import LoadingScreen from '@/components/organisms/loading-screen';
-import AddExpenseModal from '@/components/organisms/add-expense-modal';
+import { createClient } from '@/lib/supabase/client';
+
+import ExpensesTabs from '@/components/organisms/expense-tabs';
 import UserOverview from '@/components/organisms/user-overview';
 import ExpenseChart from '@/components/organisms/expense-chart';
-import ExpensesTabs from '@/components/organisms/expense-tabs';
-import BottomNavigation from '@/components/organisms/menu-navigation';
+import IntroCarousel from '@/components/organisms/intro-carousel';
+import LoadingScreen from '@/components/organisms/loading-screen';
+import MenuNavigation from '@/components/organisms/menu-navigation';
+import AddExpenseModal from '@/components/organisms/add-expense-modal';
 
 const HomeScreen: React.FC = () => {
+  const router = useRouter()
   const { hasSeenIntro, markIntroAsSeen, isLoading } = useAppIntro();
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+
+    await supabase.auth.signOut();
+    router.push('/')
+  };
 
   if (isLoading) {
     return <LoadingScreen />
@@ -30,6 +41,7 @@ const HomeScreen: React.FC = () => {
       <UserOverview
         userName="John Doe"
         totalAmount={9999.99}
+        onLogout={handleLogout}
         onViewDetail={() => {/* TODO: Implement view detail */}}
       />
 
@@ -40,7 +52,7 @@ const HomeScreen: React.FC = () => {
       <ExpensesTabs expenses={[]} onDeleteExpense={() => {}} />
 
       {/* Bottom Navigation */}
-      <BottomNavigation onAddExpense={() => setIsAddModalOpen(true)} />
+      <MenuNavigation onAddExpense={() => setIsAddModalOpen(true)} />
 
       {/* Add Expense Modal */}
       <AddExpenseModal

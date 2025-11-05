@@ -5,7 +5,7 @@ interface BottomNavigationProps {
   onAddExpense: () => void;
 }
 
-const BottomNavigation: React.FC<BottomNavigationProps> = ({ onAddExpense }) => {
+const MenuNavigation: React.FC<BottomNavigationProps> = ({ onAddExpense }) => {
   const [activeTab, setActiveTab] = React.useState('home');
 
   const navItems = [
@@ -64,4 +64,4 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ onAddExpense }) => 
   );
 };
 
-export default BottomNavigation;
+export default MenuNavigation;

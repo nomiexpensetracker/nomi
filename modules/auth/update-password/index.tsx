@@ -2,9 +2,8 @@
 
 import { Mail } from 'lucide-react';
 import { useRouter } from "next/navigation";
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
-import { toast } from '@/lib/hooks/use-toast';
 import { createClient } from "@/lib/supabase/client";
 
 import { Input } from '@/components/atoms/input';
@@ -19,13 +18,13 @@ const UpdatePassword: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
   
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
-    const supabase = createClient();
-    setIsLoading(true);
     setError(null);
-
+    setIsLoading(true);
+    
     try {
+      const supabase = createClient();
       const { error } = await supabase.auth.updateUser({ password });
       if (error) throw error;
       // Update this route to redirect to an authenticated route. The user already has an active session.
@@ -35,7 +34,7 @@ const UpdatePassword: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [password, router]);
 
   return (
     <div className="min-h-dvh bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col justify-center py-4 px-6">

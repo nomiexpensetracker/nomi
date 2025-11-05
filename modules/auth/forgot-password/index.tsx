@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import React, { useState } from 'react';
-import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
 
@@ -25,7 +24,7 @@ const ForgotPassword: React.FC = () => {
     try {
       // The url which will be included in the email. This URL needs to be configured in your redirect URLs in the Supabase dashboard at https://supabase.com/dashboard/project/_/auth/url-configuration
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${process.env.NEXT_PUBLIC_APP_HOSTNAME}/auth/update-password`,
+        redirectTo: `${process.env.NEXT_PUBLIC_APP_HOSTNAME}/auth/callback`,
       });
       if (error) throw error;
       setIsSubmitted(true);
@@ -53,14 +52,6 @@ const ForgotPassword: React.FC = () => {
               Check your email and follow the instructions to reset your password.
             </p>
           </div>
-          
-          <Link href='/auth/login'>
-            <div
-              className="w-full mt-4 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 p-2 text-center text-white font-medium rounded-md"
-            >
-              Back to Login
-            </div>
-          </Link>
         </div>
       </div>
     );
