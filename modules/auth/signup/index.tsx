@@ -41,7 +41,7 @@ const SignUp: React.FC = () => {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/protected`,
+          emailRedirectTo: `${window.location.origin}/app`,
         },
       });
       if (error) throw error;

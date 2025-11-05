@@ -17,6 +17,7 @@ module.exports = {
         "chore",
         "merge",
         "revert",
+        "revamp",
       ],
     ],
     "subject-empty": [2, "never"],
