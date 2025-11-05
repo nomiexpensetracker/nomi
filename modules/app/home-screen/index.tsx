@@ -11,7 +11,6 @@ import UserOverview from '@/components/organisms/user-overview';
 import ExpenseChart from '@/components/organisms/expense-chart';
 import IntroCarousel from '@/components/organisms/intro-carousel';
 import LoadingScreen from '@/components/organisms/loading-screen';
-import MenuNavigation from '@/components/organisms/menu-navigation';
 import AddExpenseModal from '@/components/organisms/add-expense-modal';
 
 const HomeScreen: React.FC = () => {
@@ -50,9 +49,6 @@ const HomeScreen: React.FC = () => {
 
       {/* Expenses List with Tabs Section */}
       <ExpensesTabs expenses={[]} onDeleteExpense={() => {}} />
-
-      {/* Bottom Navigation */}
-      <MenuNavigation onAddExpense={() => setIsAddModalOpen(true)} />
 
       {/* Add Expense Modal */}
       <AddExpenseModal

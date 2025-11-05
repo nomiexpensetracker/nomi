@@ -1,5 +1,10 @@
 {
   "private": true,
+  "name": "nomi-family-expense-tracker",
+  "version": "0.1.0",
+  "description": "Nomi: A Family Expense Tracker Application",
+  "author": "Dian Yuanda",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",

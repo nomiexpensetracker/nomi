@@ -1,26 +1,34 @@
-import React from 'react';
-import { Home, Target, Plus, RefreshCcw, Menu } from 'lucide-react';
+'use client';
 
-interface BottomNavigationProps {
-  onAddExpense: () => void;
+import React from 'react';
+import { Home, LucideHome, DollarSignIcon, Plus, RefreshCcw, Menu } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+
+interface NavItem {
+  id: string
+  url: string
+  icon: React.ComponentType<{ size?: number; className?: string }>
+  label: string
 }
 
-const MenuNavigation: React.FC<BottomNavigationProps> = ({ onAddExpense }) => {
+const MenuNavigation: React.FC = () => {
+  const router = useRouter()
   const [activeTab, setActiveTab] = React.useState('home');
 
-  const navItems = [
-    { id: 'home', icon: Home, label: 'Home' },
-    { id: 'goals', icon: Target, label: 'Goals' },
-    { id: 'add', icon: Plus, label: 'Add' },
-    { id: 'recurring', icon: RefreshCcw, label: 'Recurring' },
-    { id: 'more', icon: Menu, label: 'More' },
+  const navItems: NavItem[] = [
+    { id: 'home', url: '/app', icon: LucideHome, label: 'Home' },
+    { id: 'expenses', url: '/app/expenses', icon: DollarSignIcon, label: 'Expenses' },
+    { id: 'add', url: '#', icon: Plus, label: 'Add' },
+    { id: 'recurring', url: '/app/recurring', icon: RefreshCcw, label: 'Recurring' },
+    { id: 'more', url: '/app/settings', icon: Menu, label: 'More' },
   ];
 
-  const handleNavClick = (id: string) => {
-    if (id === 'add') {
-      onAddExpense();
+  const handleNavClick = (data: NavItem) => {
+    if (data.id === 'add') {
+      // !TODO: Implement add expense action with context
     } else {
-      setActiveTab(id);
+      setActiveTab(data.id);
+      router.push(data.url);
     }
   };
 
@@ -36,7 +44,7 @@ const MenuNavigation: React.FC<BottomNavigationProps> = ({ onAddExpense }) => {
             return (
               <button
                 key={item.id}
-                onClick={() => handleNavClick(item.id)}
+                onClick={() => handleNavClick(item)}
                 className="flex flex-col items-center justify-center -mt-12"
               >
                 <div className="bg-gradient-to-br from-cyan-400 to-cyan-500 rounded-full p-4 shadow-lg">
@@ -49,9 +57,9 @@ const MenuNavigation: React.FC<BottomNavigationProps> = ({ onAddExpense }) => {
           return (
             <button
               key={item.id}
-              onClick={() => handleNavClick(item.id)}
+              onClick={() => handleNavClick(item)}
               className={`flex flex-col items-center justify-center py-2 px-4 transition-colors ${
-                isActive ? 'text-[#0047BB]' : 'text-gray-400'
+                isActive ? 'text-[#0047BB] font-semibold' : 'text-gray-400'
               }`}
             >
               <Icon size={20} />

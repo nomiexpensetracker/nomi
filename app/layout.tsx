@@ -16,7 +16,7 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Spendly - Family Expense Tracker",
+  title: "Nomi - Family Expense Tracker",
   description: "",
 };
 
