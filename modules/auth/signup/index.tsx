@@ -24,7 +24,7 @@ const SignUp: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [repeatPassword, setRepeatPassword] = useState("");
 
-  const handleSignUp = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const supabase = createClient();
     setIsLoading(true);
@@ -41,11 +41,15 @@ const SignUp: React.FC = () => {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/app`,
+          emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_HOSTNAME}/app`,
         },
       });
       if (error) throw error;
-      router.push("/auth/sign-up-success");
+
+      setIsSubmitted(true)
+      setTimeout(() => {
+        router.push("/auth/login");
+      }, 1500);
     } catch (error: unknown) {
       toast({
         title: "Login failed",
@@ -58,18 +62,6 @@ const SignUp: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (fullName && email && password) {
-      setIsLoading(true);
-      // Simulate API call delay
-      setTimeout(() => {
-        setIsLoading(false);
-        setIsSubmitted(true);
-      }, 1000);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col justify-center py-4 px-6">
       <div className="max-w-md w-full mx-auto space-y-8">
@@ -79,17 +71,17 @@ const SignUp: React.FC = () => {
           </div>
           {isSubmitted ? (
             <>
-              <h1 className="text-2xl font-bold text-gray-900">Create Account</h1>
-              <p className="text-gray-600 mt-2">Sign up to get started</p>
-            </>
-          ) : (
-            <>
               <h1 className="text-2xl font-bold text-gray-900">Thank you for signing up!</h1>
               <p className="text-gray-600 mt-2">Check your email to confirm</p>
               <p className="text-sm text-muted-foreground">
                 You&apos;ve successfully signed up. Please check your email to
                 confirm your account before signing in.
               </p>
+            </>
+          ) : (
+            <>
+              <h1 className="text-2xl font-bold text-gray-900">Create Account</h1>
+              <p className="text-gray-600 mt-2">Sign up to get started</p>
             </>
           )}
         </div>
