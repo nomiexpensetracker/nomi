@@ -1,16 +1,19 @@
+'use client';
 
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { Check, Crown, ArrowLeft, Lock } from 'lucide-react';
 
 import { Button } from '@/components/atoms/button';
 
-interface PricingScreenProps {
+interface PricingProps {
   isFromFreePlan?: boolean;
 }
 
-const PricingScreen: React.FC<PricingScreenProps> = ({
+const Pricing: React.FC<PricingProps> = ({
   isFromFreePlan = false
 }) => {
+  const router = useRouter();
   const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'annual'>('monthly');
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -45,15 +48,13 @@ const PricingScreen: React.FC<PricingScreenProps> = ({
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col">
       {/* Header */}
-      <div className="flex items-center p-6 pt-12">
+      <div className="flex items-center p-6">
         <button
+          onClick={() => router.back()}
           className="p-2 rounded-lg hover:bg-white/50 transition-colors"
         >
           <ArrowLeft size={20} className="text-gray-600" />
         </button>
-        <h1 className="flex-1 text-center text-xl font-bold text-gray-900">
-          {isFromFreePlan ? 'Unlock Premium Features' : 'Family Mode Premium'}
-        </h1>
       </div>
 
       <div className="flex-1 px-6 pb-6">
@@ -154,4 +155,4 @@ const PricingScreen: React.FC<PricingScreenProps> = ({
   );
 };
 
-export default PricingScreen;
+export default Pricing;

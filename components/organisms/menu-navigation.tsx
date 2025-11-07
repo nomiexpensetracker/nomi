@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { LucideHome, DollarSignIcon, Plus, RefreshCcw, Menu } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 
 import { useAppIntro } from '@/lib/hooks/use-intro';
 
@@ -17,8 +17,13 @@ interface NavItem {
 
 const MenuNavigation: React.FC = () => {
   const router = useRouter()
-  const { hasSeenIntro, markIntroAsSeen } = useAppIntro();
-  const [activeTab, setActiveTab] = React.useState('home');
+  const pathname = usePathname()
+
+  const { hasSeenIntro } = useAppIntro();
+
+  const [activeTab, setActiveTab] = useState('home');
+
+  const noNavbarRoutes = ['/app/settings/pricing', '/app/settings/subscription'];
 
   const navItems: NavItem[] = [
     { id: 'home', url: '/app', icon: LucideHome, label: 'Home' },
@@ -37,8 +42,8 @@ const MenuNavigation: React.FC = () => {
     }
   };
 
-  if (!hasSeenIntro) {
-    return <IntroCarousel onComplete={markIntroAsSeen} />;
+  if (!hasSeenIntro || noNavbarRoutes.includes(pathname)) {
+    return null;
   }
 
   return (

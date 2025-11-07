@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import React from 'react';
 import {
   Gem,
@@ -79,12 +80,12 @@ const Settings: React.FC = () => {
             <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center flex-shrink-0">
               <Gem className="w-6 h-6 text-cyan-500" />
             </div>
-            <div className="flex-1">
+            <Link href="/app/settings/pricing" className="flex-1">
               <h3 className="text-cyan-500 font-semibold mb-1">Subscription</h3>
               <p className="text-gray-700 text-sm">
                 Choose our best plan that fit with your need
               </p>
-            </div>
+            </Link>
           </div>
         </div>
 
