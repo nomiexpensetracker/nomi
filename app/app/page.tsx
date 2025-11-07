@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
-import HomeScreen from "@/modules/app/home-screen";
+
+import Home from "@/modules/app/home";
 
 export default async function ProtectedPage() {
   const supabase = await createClient();
@@ -11,7 +12,5 @@ export default async function ProtectedPage() {
     redirect("/auth/login");
   }
 
-  return (
-    <HomeScreen />
-  );
+  return <Home />;
 }

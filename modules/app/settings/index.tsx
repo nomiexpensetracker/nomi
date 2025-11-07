@@ -13,9 +13,10 @@ import {
   Settings as SettingsIcon,
 } from 'lucide-react';
 
+import { useStore } from '@/lib/stores';
+
 const Settings: React.FC = () => {
-  const userName = 'John Doe';
-  const userEmail = 'user@example.com';
+  const { user: { data } } = useStore();
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
@@ -26,13 +27,13 @@ const Settings: React.FC = () => {
         <div className="absolute bottom-0 right-20 w-32 h-32 bg-white/10 rounded-full translate-y-1/2" />
         
         <div className="relative flex items-center justify-between">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center text-white text-xl font-semibold">
-              {userName.charAt(0).toUpperCase()}
+              {data && data.name.charAt(0).toUpperCase()}
             </div>
             <div>
-              <h2 className="text-white text-xl font-semibold">{userName}</h2>
-              <p className="text-white/80 text-sm">{userEmail}</p>
+              <h2 className="text-white text-xl font-semibold">{data?.name}</h2>
+              <p className="text-white/80 text-sm">{data?.email}</p>
             </div>
           </div>
           <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">

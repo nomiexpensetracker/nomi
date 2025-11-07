@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppIntro } from '@/lib/hooks/use-intro';
 
+import { useStore } from '@/lib/stores';
 import { createClient } from '@/lib/supabase/client';
 
 import ExpensesTabs from '@/components/organisms/expense-tabs';
@@ -15,6 +16,7 @@ import AddExpenseModal from '@/components/organisms/add-expense-modal';
 
 const HomeScreen: React.FC = () => {
   const router = useRouter()
+  const { user: { data } } = useStore();
   const { hasSeenIntro, markIntroAsSeen, isLoading } = useAppIntro();
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -38,7 +40,7 @@ const HomeScreen: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* User Overview Section */}
       <UserOverview
-        userName="John Doe"
+        userName={data?.name || 'User'}
         totalAmount={9999.99}
         onLogout={handleLogout}
         onViewDetail={() => {/* TODO: Implement view detail */}}

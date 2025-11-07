@@ -1,7 +1,9 @@
 import { NextIntlClientProvider } from "next-intl";
 
-import MenuNavigation from "@/components/organisms/menu-navigation";
+import { AppProvider } from "@/lib/contexts/app-provider";
+
 import { Toaster } from "@/components/atoms/toaster";
+import MenuNavigation from "@/components/organisms/menu-navigation";
 import { TooltipProvider } from "@/components/atoms/tooltip";
 
 export default function ProtectedLayout({
@@ -11,11 +13,13 @@ export default function ProtectedLayout({
 }) {
   return (
     <NextIntlClientProvider>
-      <TooltipProvider>
-        <Toaster />
-        {children}
-        <MenuNavigation />
-      </TooltipProvider>
+      <AppProvider>
+        <TooltipProvider>
+          <Toaster />
+          {children}
+          <MenuNavigation />
+        </TooltipProvider>
+      </AppProvider>
     </NextIntlClientProvider>
   );
 }

@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { Mona_Sans } from "next/font/google";
 import { ThemeProvider } from "next-themes";
-import {NextIntlClientProvider} from 'next-intl';
+import { NextIntlClientProvider } from "next-intl";
+
+import { AppProvider } from "@/lib/contexts/app-provider";
+import { ViewportProvider } from "@/lib/contexts/viewport-provider";
 
 import { Toaster } from "@/components/atoms/toaster";
 import MobileOnlyScreen from "@/components/molecules/mobile-only-screen";
 import { TooltipProvider } from "@/components/atoms/tooltip";
-import { ViewportProvider } from "@/lib/contexts/viewport-provider";
 
 import "./globals.css";
 
@@ -34,18 +36,20 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.className} antialiased`}>
-        <ViewportProvider>
-          <MobileOnlyScreen>
-            <ThemeProvider>
-              <NextIntlClientProvider>
-                <TooltipProvider>
-                  <Toaster />
-                  {children}
-                </TooltipProvider>
-              </NextIntlClientProvider>
-            </ThemeProvider>
-          </MobileOnlyScreen>
-        </ViewportProvider>
+        <NextIntlClientProvider>
+          <ThemeProvider>
+            <AppProvider>
+              <ViewportProvider>
+                <MobileOnlyScreen>
+                  <TooltipProvider>
+                    <Toaster />
+                    {children}
+                  </TooltipProvider>
+                </MobileOnlyScreen>
+              </ViewportProvider>
+            </AppProvider>
+          </ThemeProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );
