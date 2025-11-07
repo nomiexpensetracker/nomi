@@ -1,17 +1,27 @@
 'use client';
 
 import { Mail } from 'lucide-react';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { useRouter } from "next/navigation";
 import React, { useCallback, useState } from 'react';
 
+import useCaptcha from '@/lib/hooks/use-captcha';
 import { createClient } from "@/lib/supabase/client";
 
 import { Input } from '@/components/atoms/input';
 import { Label } from '@/components/atoms/label';
 import { Button } from '@/components/atoms/button';
+import { toast } from '@/lib/hooks/use-toast';
 
 const UpdatePassword: React.FC = () => {
   const router = useRouter();
+  const {
+    captchaRef,
+    captchaToken,
+    handleResetCaptcha,
+    handleVerifyCaptcha,
+    handleVerifyChallenge,
+  } = useCaptcha()
 
   const [error, setError] = useState<string | null>(null);
   const [password, setPassword] = useState('');
@@ -20,15 +30,36 @@ const UpdatePassword: React.FC = () => {
   
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setIsLoading(true);
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      setIsLoading(false);
+      return;
+    }
     
     try {
-      const supabase = createClient();
-      const { error } = await supabase.auth.updateUser({ password });
-      if (error) throw error;
-      // Update this route to redirect to an authenticated route. The user already has an active session.
-      router.push("/app");
+      if (!captchaToken) {
+        toast({
+          title: 'Gagal memverifikasi captcha!',
+          variant: 'destructive',
+          description: 'Harap selesaikan verifikasi captcha.',
+        })
+        return
+      }
+
+      setError(null);
+      setIsLoading(true);
+
+      if (await handleVerifyCaptcha()) {
+        const supabase = createClient();
+        const { error } = await supabase.auth.updateUser({ password });
+        if (error) throw error;
+
+        // Update this route to redirect to an authenticated route. The user already has an active session.
+        handleResetCaptcha();
+        router.push("/app");
+      }
+
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
@@ -80,6 +111,12 @@ const UpdatePassword: React.FC = () => {
               />
             </div>
           </div>
+
+          <HCaptcha
+            ref={captchaRef}
+            sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY || ''}
+            onVerify={handleVerifyChallenge}
+          />
 
           {error && <p className="text-sm text-red-500">{error}</p>}
 

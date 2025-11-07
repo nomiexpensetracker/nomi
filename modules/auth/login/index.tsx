@@ -1,11 +1,13 @@
 'use client'
 
 import Link from 'next/link';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { useRouter, redirect } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 
 import { toast } from '@/lib/hooks/use-toast';
+import useCaptcha from '@/lib/hooks/use-captcha';
 import { createClient } from "@/lib/supabase/client";
 
 import { Label } from '@/components/atoms/label';
@@ -14,6 +16,13 @@ import { Button } from '@/components/atoms/button';
 
 const Login: React.FC = () => {
   const router = useRouter();
+  const {
+    captchaRef,
+    captchaToken,
+    handleResetCaptcha,
+    handleVerifyCaptcha,
+    handleVerifyChallenge,
+  } = useCaptcha()
 
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -37,15 +46,27 @@ const Login: React.FC = () => {
     setError(null);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (error) throw error;
-      // Update this route to redirect to an authenticated route. The user already has an active session.
-      router.push("/app");
+      if (!captchaToken) {
+        toast({
+          title: 'Gagal memverifikasi captcha!',
+          variant: 'destructive',
+          description: 'Harap selesaikan verifikasi captcha.',
+        })
+        return
+      }
+
+      if (await handleVerifyCaptcha()) {
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (error) throw error;
+        if (!error) {
+          handleResetCaptcha()
+          router.push("/app");
+        }
+      }
     } catch (error: unknown) {
-      // setError(error instanceof Error ? error.message : "An error occurred");
       toast({
         title: "Login failed",
         description:
@@ -72,7 +93,7 @@ const Login: React.FC = () => {
           <p className="text-gray-600 mt-2">Sign in to your account</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-12">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-4">
             <div>
               <Label htmlFor="email">Email</Label>
@@ -114,6 +135,12 @@ const Login: React.FC = () => {
               {error && <p className="text-sm text-red-500">{error}</p>}
             </div>
           </div>
+
+          <HCaptcha
+            ref={captchaRef}
+            sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY || ''}
+            onVerify={handleVerifyChallenge}
+          />
 
           <Button
             type="submit"

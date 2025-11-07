@@ -21,3 +21,8 @@ export interface RecurringItem {
   iconBg?: string;
   iconText?: string;
 }
+
+export interface CommonResponse {
+  message: string
+  success: boolean
+}

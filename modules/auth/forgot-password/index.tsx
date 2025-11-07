@@ -1,15 +1,27 @@
 'use client';
 
 import Link from 'next/link';
-import React, { useState } from 'react';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { createClient } from "@/lib/supabase/client";
+import React, { useState } from 'react';
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
+
+import { toast } from '@/lib/hooks/use-toast';
+import useCaptcha from '@/lib/hooks/use-captcha';
 
 import { Input } from '@/components/atoms/input';
 import { Label } from '@/components/atoms/label';
 import { Button } from '@/components/atoms/button';
 
 const ForgotPassword: React.FC = () => {
+  const {
+    captchaRef,
+    captchaToken,
+    handleResetCaptcha,
+    handleVerifyCaptcha,
+    handleVerifyChallenge,
+  } = useCaptcha()
+
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -17,17 +29,32 @@ const ForgotPassword: React.FC = () => {
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const supabase = createClient();
-    setIsLoading(true);
-    setError(null);
 
     try {
-      // The url which will be included in the email. This URL needs to be configured in your redirect URLs in the Supabase dashboard at https://supabase.com/dashboard/project/_/auth/url-configuration
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${process.env.NEXT_PUBLIC_APP_HOSTNAME}/auth/callback`,
-      });
-      if (error) throw error;
-      setIsSubmitted(true);
+      if (!captchaToken) {
+        toast({
+          title: 'Gagal memverifikasi captcha!',
+          variant: 'destructive',
+          description: 'Harap selesaikan verifikasi captcha.',
+        })
+        return
+      }
+
+      if (await handleVerifyCaptcha()) {
+        setError(null);
+        setIsLoading(true);
+        // The url which will be included in the email. This URL needs to be configured in your redirect URLs in the Supabase dashboard at https://supabase.com/dashboard/project/_/auth/url-configuration
+        const supabase = createClient();
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${process.env.NEXT_PUBLIC_APP_HOSTNAME}/auth/callback`,
+        });
+        if (error) throw error;
+        if (!error) {
+          setIsSubmitted(true);
+          handleResetCaptcha();
+        }
+      }
+      
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
@@ -59,15 +86,7 @@ const ForgotPassword: React.FC = () => {
 
   return (
     <div className="min-h-dvh bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col justify-center p-4">
-      <div className="max-w-md w-full mx-auto space-y-8">
-        <Link
-          href='/auth/login'
-          className="flex items-center text-gray-600 hover:text-gray-800 mb-4"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Login
-        </Link>
-
+      <div className="max-w-md w-full mx-auto space-y-6">
         <div className="text-center">
           <div className="mx-auto w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl flex items-center justify-center mb-4">
             <Mail className="w-6 h-6 text-white" />
@@ -78,7 +97,7 @@ const ForgotPassword: React.FC = () => {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Label htmlFor="email">Email Address</Label>
             <div className="relative mt-1">
@@ -96,6 +115,12 @@ const ForgotPassword: React.FC = () => {
             {error && <p className="text-sm text-red-500">{error}</p>}
           </div>
 
+          <HCaptcha
+            ref={captchaRef}
+            sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY || ''}
+            onVerify={handleVerifyChallenge}
+          />
+
           <Button
             type="submit"
             className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
@@ -111,6 +136,18 @@ const ForgotPassword: React.FC = () => {
             )}
           </Button>
         </form>
+
+        <div className="text-center">
+          <div className="text-gray-600 text-sm">
+            Don't have an account?{' '}
+            <Link
+              href="/auth/sign-up"
+              className="text-purple-600 hover:text-purple-700 font-medium"
+            >
+              Sign up
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

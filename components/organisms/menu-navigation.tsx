@@ -1,8 +1,12 @@
 'use client';
 
 import React from 'react';
-import { Home, LucideHome, DollarSignIcon, Plus, RefreshCcw, Menu } from 'lucide-react';
+import { LucideHome, DollarSignIcon, Plus, RefreshCcw, Menu } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+
+import { useAppIntro } from '@/lib/hooks/use-intro';
+
+import IntroCarousel from '@/components/organisms/intro-carousel';
 
 interface NavItem {
   id: string
@@ -13,6 +17,7 @@ interface NavItem {
 
 const MenuNavigation: React.FC = () => {
   const router = useRouter()
+  const { hasSeenIntro, markIntroAsSeen } = useAppIntro();
   const [activeTab, setActiveTab] = React.useState('home');
 
   const navItems: NavItem[] = [
@@ -31,6 +36,10 @@ const MenuNavigation: React.FC = () => {
       router.push(data.url);
     }
   };
+
+  if (!hasSeenIntro) {
+    return <IntroCarousel onComplete={markIntroAsSeen} />;
+  }
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-2 pb-safe">

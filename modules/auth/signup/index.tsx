@@ -1,11 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import React, { useState } from 'react';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
 
 import { toast } from '@/lib/hooks/use-toast';
+import useCaptcha from '@/lib/hooks/use-captcha';
 import { createClient } from "@/lib/supabase/client";
 
 import { Input } from '@/components/atoms/input';
@@ -14,6 +16,13 @@ import { Button } from '@/components/atoms/button';
 
 const SignUp: React.FC = () => {
   const router = useRouter();
+  const {
+    captchaRef,
+    captchaToken,
+    handleResetCaptcha,
+    handleVerifyCaptcha,
+    handleVerifyChallenge,
+  } = useCaptcha()
 
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -26,9 +35,6 @@ const SignUp: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const supabase = createClient();
-    setIsLoading(true);
-    setError(null);
 
     if (password !== repeatPassword) {
       setError("Passwords do not match");
@@ -37,19 +43,35 @@ const SignUp: React.FC = () => {
     }
 
     try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_HOSTNAME}/app`,
-        },
-      });
-      if (error) throw error;
+      if (!captchaToken) {
+        toast({
+          title: 'Gagal memverifikasi captcha!',
+          variant: 'destructive',
+          description: 'Harap selesaikan verifikasi captcha.',
+        })
+        return
+      }
 
-      setIsSubmitted(true)
-      setTimeout(() => {
-        router.push("/auth/login");
-      }, 1500);
+      if (await handleVerifyCaptcha()) {
+        setError(null);
+        setIsLoading(true);
+
+        const supabase = createClient();
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_HOSTNAME}/app`,
+          },
+        });
+        if (error) throw error;
+
+        setIsSubmitted(true)
+        handleResetCaptcha()
+        setTimeout(() => {
+          router.push("/auth/login");
+        }, 1500);
+      }
     } catch (error: unknown) {
       toast({
         title: "Login failed",
@@ -64,7 +86,7 @@ const SignUp: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col justify-center py-4 px-6">
-      <div className="max-w-md w-full mx-auto space-y-8">
+      <div className="max-w-md w-full mx-auto space-y-6">
         <div className="text-center">
           <div className="mx-auto w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl flex items-center justify-center mb-4">
             <User className="w-6 h-6 text-white" />
@@ -168,6 +190,12 @@ const SignUp: React.FC = () => {
                   </div>
                 </div>
               </div>
+
+              <HCaptcha
+                ref={captchaRef}
+                sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY || ''}
+                onVerify={handleVerifyChallenge}
+              />
 
               {error && <p className="text-sm text-red-500">{error}</p>}
 
