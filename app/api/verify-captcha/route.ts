@@ -4,11 +4,12 @@ interface HCaptchaRequest {
   token: string
 }
 
-export interface HCaptchaResponse {
-  challenge_ts: string
-  credit: boolean
-  hostname: string
+interface HCaptchaResponse {
   success: boolean
+  challenge_ts?: string
+  credit?: boolean
+  hostname?: string
+  'error-codes'?: string[]
 }
 
 export async function POST(req: Request) {
@@ -20,7 +21,6 @@ export async function POST(req: Request) {
   }
 
   try {
-    // check verifying the token with hCaptcha API
     const response = await fetch('https://api.hcaptcha.com/siteverify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -31,10 +31,21 @@ export async function POST(req: Request) {
     })
 
     const data = (await response.json()) as HCaptchaResponse
+    console.log('hCaptcha verify result:', JSON.stringify(data, null, 2))
 
-    if (!data.success) throw new Error(`${response}`)
-    return NextResponse.json({ success: true, message: 'Captcha terverifikasi' })
+    if (!data.success) {
+      throw new Error(JSON.stringify(data))
+    }
+
+    return NextResponse.json({ success: true, message: 'Captcha verification success.' })
   } catch (error) {
-    return NextResponse.json({ success: false, message: `Gagal memverifikasi captcha. ${error}` }, { status: 500 })
+    console.error('hCaptcha verification failed:', error)
+    return NextResponse.json(
+      {
+        success: false,
+        message: `Captcha verification failed: ${error instanceof Error ? error.message : String(error)}`,
+      },
+      { status: 500 },
+    )
   }
 }
