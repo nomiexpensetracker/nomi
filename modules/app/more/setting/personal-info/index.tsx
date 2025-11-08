@@ -1,27 +1,26 @@
 'use client';
 
+import { Camera } from 'lucide-react';
 import React, { useState } from 'react';
-import { ArrowLeft, Camera } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/atoms/avatar';
+
+import { useStore } from '@/lib/stores';
+
 import { Input } from '@/components/atoms/input';
 import { Label } from '@/components/atoms/label';
 import { Button } from '@/components/atoms/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/atoms/avatar';
 import { RadioGroup, RadioGroupItem } from '@/components/atoms/radio-group';
-import { User } from '@/types/user';
 
-interface PersonalInfoScreenProps {
-  onBack: () => void;
-  user?: User;
-}
+const PersonalInfoScreen: React.FC = () => {
+  const { user: { data } } = useStore() 
 
-const PersonalInfoScreen: React.FC<PersonalInfoScreenProps> = ({ onBack, user }) => {
   const [formData, setFormData] = useState({
-    fullName: user?.name || 'John Doe',
+    fullName: data?.name || 'John Doe',
     username: '@johndoe',
     gender: 'Male',
     birthday: '05-01-2001',
     phone: '(+880) 1759263000',
-    email: user?.email || 'johndoe@gmail.com',
+    email: data?.email || 'johndoe@gmail.com',
   });
 
   const handleSave = () => {
