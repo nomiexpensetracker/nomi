@@ -68,10 +68,10 @@ const Settings: React.FC = () => {
 
         {/* Setting */}
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-          <button className="w-full flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition-colors">
+          <Link href='/app/more/setting' className="w-full flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition-colors">
             <span className="text-gray-900 font-medium">Setting</span>
             <SettingsIcon className="w-5 h-5 text-gray-400" />
-          </button>
+          </Link>
         </div>
 
         {/* Subscription Card */}
@@ -81,7 +81,7 @@ const Settings: React.FC = () => {
             <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center flex-shrink-0">
               <Gem className="w-6 h-6 text-cyan-500" />
             </div>
-            <Link href="/app/settings/pricing" className="flex-1">
+            <Link href="/app/more/pricing" className="flex-1">
               <h3 className="text-cyan-500 font-semibold mb-1">Subscription</h3>
               <p className="text-gray-700 text-sm">
                 Choose our best plan that fit with your need

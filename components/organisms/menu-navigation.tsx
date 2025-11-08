@@ -23,14 +23,14 @@ const MenuNavigation: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState('home');
 
-  const noNavbarRoutes = ['/app/settings/pricing', '/app/settings/subscription'];
+  const noNavbarRoutes = ['/app/more/pricing', '/app/more/subscription'];
 
   const navItems: NavItem[] = [
     { id: 'home', url: '/app', icon: LucideHome, label: 'Home' },
     { id: 'expenses', url: '/app/expenses', icon: DollarSignIcon, label: 'Expenses' },
     { id: 'add', url: '#', icon: Plus, label: 'Add' },
     { id: 'recurring', url: '/app/recurring', icon: RefreshCcw, label: 'Recurring' },
-    { id: 'more', url: '/app/settings', icon: Menu, label: 'More' },
+    { id: 'more', url: '/app/more', icon: Menu, label: 'More' },
   ];
 
   const handleNavClick = (data: NavItem) => {
