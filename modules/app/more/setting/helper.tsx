@@ -6,6 +6,7 @@ import {
   XCircle,
   FileText,
   Languages,
+  LockKeyhole,
   DollarSign,
   LucideIcon,
   AlertCircle,
@@ -68,6 +69,13 @@ export const settingsMenu: SettingMenu[] = [
     type: 'normal',
     link: '/app/more/setting/change-password',
     label: 'Change Password',
+  },
+  {
+    id: 'change-pin',
+    icon: LockKeyhole,
+    type: 'normal',
+    link: '/app/more/setting/change-pin',
+    label: 'Change PIN',
   },
   {
     id: 'close-account',
