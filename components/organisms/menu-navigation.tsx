@@ -6,7 +6,7 @@ import { LucideHome, DollarSignIcon, Plus, RefreshCcw, Menu } from 'lucide-react
 
 import { useAppIntro } from '@/lib/hooks/use-intro';
 
-import IntroCarousel from '@/components/organisms/intro-carousel';
+import { useAppContext } from '@/lib/contexts/app-provider';
 
 interface NavItem {
   id: string
@@ -20,6 +20,7 @@ const MenuNavigation: React.FC = () => {
   const pathname = usePathname()
 
   const { hasSeenIntro } = useAppIntro();
+  const { toggleAddExpenseModal } = useAppContext();
 
   const [activeTab, setActiveTab] = useState('home');
 
@@ -35,7 +36,7 @@ const MenuNavigation: React.FC = () => {
 
   const handleNavClick = (data: NavItem) => {
     if (data.id === 'add') {
-      // !TODO: Implement add expense action with context
+      toggleAddExpenseModal();
     } else {
       setActiveTab(data.id);
       router.push(data.url);

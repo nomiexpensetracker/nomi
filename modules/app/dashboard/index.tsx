@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAppIntro } from '@/lib/hooks/use-intro';
 
 import { useStore } from '@/lib/stores';
 import { createClient } from '@/lib/supabase/client';
@@ -10,15 +9,15 @@ import { createClient } from '@/lib/supabase/client';
 import ExpensesTabs from '@/components/organisms/expense-tabs';
 import UserOverview from '@/components/organisms/user-overview';
 import ExpenseChart from '@/components/organisms/expense-chart';
-import IntroCarousel from '@/components/organisms/intro-carousel';
 import LoadingScreen from '@/components/organisms/loading-screen';
+import AddExpenseModal from '@/components/organisms/add-expense-modal';
 
-const HomeScreen: React.FC = () => {
-  const router = useRouter()
+const Dashboard: React.FC = () => {
+  const router = useRouter();
+
   const { user: { data } } = useStore();
-  const { hasSeenIntro, markIntroAsSeen, isLoading } = useAppIntro();
 
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogout = async () => {
     const supabase = createClient();
@@ -29,10 +28,6 @@ const HomeScreen: React.FC = () => {
 
   if (isLoading) {
     return <LoadingScreen />
-  }
-
-  if (!hasSeenIntro) {
-    return <IntroCarousel onComplete={markIntroAsSeen} />;
   }
 
   return (
@@ -54,4 +49,4 @@ const HomeScreen: React.FC = () => {
   );
 }
 
-export default HomeScreen;
+export default Dashboard;

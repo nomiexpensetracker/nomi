@@ -3,19 +3,15 @@ import React, { useState } from 'react';
 import { X, Calendar } from 'lucide-react';
 
 import CategorySelector from '@/components/molecules/category-selecter';
-import { Expense, Category } from '@/types/common';
+
+import { Category } from '@/types/common';
 
 interface AddExpenseModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddExpense: (expense: Omit<Expense, 'id'>) => void;
 }
 
-const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
-  isOpen,
-  onClose,
-  onAddExpense,
-}) => {
+const AddExpenseModal: React.FC<AddExpenseModalProps> = ({ isOpen, onClose }) => {
   const [title, setTitle] = useState('');
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState<Category>('Others');
@@ -29,7 +25,8 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
       return;
     }
 
-    onAddExpense({
+    //! TODO - use hooks to add expense to database
+    console.log('AddExpenseModal', {
       title: title.trim(),
       amount: parseFloat(amount),
       category,
@@ -73,7 +70,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter expense title"
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full px-4 py-3 bg-white focus:outline-none text-black border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
               required
             />
           </div>
@@ -92,7 +89,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="0.00"
-                className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full pl-8 pr-4 py-3 bg-white focus:outline-none text-black border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 required
               />
             </div>
@@ -119,7 +116,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-white focus:outline-none text-black border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 required
               />
               <Calendar size={20} className="absolute right-4 top-3 text-gray-400 pointer-events-none" />
@@ -136,7 +133,7 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Add any additional notes"
               rows={3}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+              className="w-full px-4 py-3 bg-white focus:outline-none text-black border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
             />
           </div>
 
