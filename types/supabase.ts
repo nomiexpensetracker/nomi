@@ -575,6 +575,50 @@ export type Database = {
           },
         ]
       }
+      relationship_invitations: {
+        Row: {
+          created_at: string
+          family_room_id: string
+          id: string
+          invitee_email: string
+          invitee_id: string | null
+          inviter_id: string
+          role: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          family_room_id: string
+          id?: string
+          invitee_email: string
+          invitee_id?: string | null
+          inviter_id: string
+          role?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          family_room_id?: string
+          id?: string
+          invitee_email?: string
+          invitee_id?: string | null
+          inviter_id?: string
+          role?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "relationship_invitations_family_room_id_fkey"
+            columns: ["family_room_id"]
+            isOneToOne: false
+            referencedRelation: "family_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       report_summaries: {
         Row: {
           category_breakdown: Json | null
@@ -885,6 +929,54 @@ export type Database = {
           },
         ]
       }
+      view_couple_expenses: {
+        Row: {
+          amount: number | null
+          category: string | null
+          created_at: string | null
+          currency_code: string | null
+          description: string | null
+          id: string | null
+          is_recurring: boolean | null
+          transaction_date: string | null
+          updated_at: string | null
+          user_id: string | null
+          user_name: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      view_family_expenses: {
+        Row: {
+          amount: number | null
+          category: string | null
+          created_at: string | null
+          currency_code: string | null
+          description: string | null
+          id: string | null
+          is_recurring: boolean | null
+          transaction_date: string | null
+          updated_at: string | null
+          user_id: string | null
+          user_name: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       view_system_categories: {
         Row: {
           category_icon: string | null
@@ -897,9 +989,84 @@ export type Database = {
         }
         Relationships: []
       }
+      view_total_couple_expenses: {
+        Row: {
+          family_id: string | null
+          month: string | null
+          total_amount: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "users_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "family_rooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      view_total_family_expenses: {
+        Row: {
+          month: string | null
+          scope_id: string | null
+          total_amount: number | null
+        }
+        Relationships: []
+      }
+      view_total_user_expenses: {
+        Row: {
+          month: string | null
+          total_amount: number | null
+          user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      view_user_expenses: {
+        Row: {
+          amount: number | null
+          category: string | null
+          created_at: string | null
+          currency_code: string | null
+          description: string | null
+          id: string | null
+          is_recurring: boolean | null
+          transaction_date: string | null
+          updated_at: string | null
+          user_id: string | null
+          user_name: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
-      [_ in never]: never
+      accept_relationship_invite: {
+        Args: { p_invite_id: string }
+        Returns: undefined
+      }
+      create_relationship_invite: {
+        Args: {
+          p_family_room_id: string
+          p_invitee_email: string
+          p_role?: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never

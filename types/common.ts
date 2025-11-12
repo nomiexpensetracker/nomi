@@ -1,4 +1,8 @@
-export type AppMode = 'Single' | 'Couple' | 'Family';
+export enum RelationshipMode {
+  Single = 'single',
+  Couple = 'couple',
+  Family = 'family',
+}
 export type Category = 'Food' | 'Bills' | 'Transport' | 'Entertainment' | 'Others';
 export type RecurringType = 'subscription' | 'bill';
 

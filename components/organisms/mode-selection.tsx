@@ -2,26 +2,24 @@
 import React from 'react';
 import { User, Users, UsersRound } from 'lucide-react';
 
-import { AppMode } from '@/types/common';
-
 const ModeSelection: React.FC = () => {
   const modes = [
     {
-      type: 'Single' as AppMode,
+      type: 'Single',
       icon: User,
       title: 'Single',
       description: 'Track your personal expenses',
       gradient: 'from-purple-500 to-pink-500',
     },
     {
-      type: 'Couple' as AppMode,
+      type: 'Couple',
       icon: Users,
       title: 'Couple',
       description: 'Manage expenses together',
       gradient: 'from-blue-500 to-purple-500',
     },
     {
-      type: 'Family' as AppMode,
+      type: 'Family',
       icon: UsersRound,
       title: 'Family',
       description: 'Track family expenses',

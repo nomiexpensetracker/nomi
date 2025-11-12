@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useAppIntro } from '@/lib/hooks/use-intro';
 
+import useExpense from '@/lib/hooks/use-expense';
 import { useStore } from '@/lib/stores';
 import { createClient } from '@/lib/supabase/client';
 
@@ -14,8 +15,12 @@ import LoadingScreen from '@/components/organisms/loading-screen';
 
 const HomeScreen: React.FC = () => {
   const router = useRouter()
-  const { user: { data } } = useStore();
+
+  const user = useStore((state) => state.user);
+
   const { hasSeenIntro, markIntroAsSeen, isLoading } = useAppIntro();
+
+  const { isLoading: isExpenseLoading, expenseCount } = useExpense();
 
   const handleLogout = async () => {
     const supabase = createClient();
@@ -24,7 +29,7 @@ const HomeScreen: React.FC = () => {
     router.push('/')
   };
 
-  if (isLoading) {
+  if (isLoading || isExpenseLoading) {
     return <LoadingScreen />
   }
 
@@ -36,9 +41,9 @@ const HomeScreen: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* User Overview Section */}
       <UserOverview
-        userName={data?.name || 'User'}
-        totalAmount={9999.99}
+        userName={user.data?.name || 'User'}
         onLogout={handleLogout}
+        totalAmount={expenseCount}
         onViewDetail={() => {/* TODO: Implement view detail */}}
       />
 
