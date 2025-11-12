@@ -68,7 +68,6 @@ const OTPScreen: React.FC<OTPScreenProps> = ({ email = "mail@example.com" }) => 
     setError('');
     inputRefs.current[0]?.focus();
     // ! TODO: Implement resend OTP logic
-    console.log('OTP resent to:', email);
   };
 
   return (
@@ -87,7 +86,7 @@ const OTPScreen: React.FC<OTPScreenProps> = ({ email = "mail@example.com" }) => 
           </div>
           <h1 className="text-2xl font-bold text-gray-900">Verify Your Email</h1>
           <p className="text-gray-600 mt-2">
-            We've sent a 6-digit code to <br />
+            We&apos;ve sent a 6-digit code to <br />
             <span className="font-medium">{email}</span>
           </p>
         </div>
@@ -133,7 +132,7 @@ const OTPScreen: React.FC<OTPScreenProps> = ({ email = "mail@example.com" }) => 
 
         <div className="text-center">
           <p className="text-gray-600 text-sm">
-            Didn't receive the code?{' '}
+            Didn&apos;t receive the code?{' '}
             <button
               onClick={handleResendOTP}
               className="text-green-600 hover:text-green-700 font-medium"

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { createClient } from "@/lib/supabase/client";
 import React, { useState } from 'react';
-import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
+import { Mail, CheckCircle } from 'lucide-react';
 
 import { toast } from '@/lib/hooks/use-toast';
 import useCaptcha from '@/lib/hooks/use-captcha';
@@ -72,7 +72,7 @@ const ForgotPassword: React.FC = () => {
             </div>
             <h1 className="text-2xl font-bold text-gray-900">Reset Link Sent!</h1>
             <p className="text-gray-600 mt-2">
-              We've sent a password reset link to <br />
+              We&apos;ve sent a password reset link to <br />
               <span className="font-medium">{email}</span>
             </p>
             <p className="text-sm text-gray-500 mt-4">
@@ -93,7 +93,7 @@ const ForgotPassword: React.FC = () => {
           </div>
           <h1 className="text-2xl font-bold text-gray-900">Forgot Password?</h1>
           <p className="text-gray-600 mt-2">
-            Enter your email address and we'll send you a link to reset your password.
+            Enter your email address and we&apos;ll send you a link to reset your password.
           </p>
         </div>
 
@@ -139,7 +139,7 @@ const ForgotPassword: React.FC = () => {
 
         <div className="text-center">
           <div className="text-gray-600 text-sm">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link
               href="/auth/sign-up"
               className="text-purple-600 hover:text-purple-700 font-medium"

@@ -118,7 +118,7 @@ const Pricing: React.FC<PricingProps> = ({
 
         {/* Features */}
         <div className="bg-white rounded-2xl p-6 mb-8">
-          <h3 className="font-semibold text-gray-900 mb-4">What's included:</h3>
+          <h3 className="font-semibold text-gray-900 mb-4">What&apos;s included:</h3>
           <div className="space-y-3">
             {features.map((feature, index) => (
               <div key={index} className="flex items-center space-x-3">

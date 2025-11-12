@@ -24,7 +24,6 @@ const PersonalInfoScreen: React.FC = () => {
   });
 
   const handleSave = () => {
-    console.log('Saving personal info:', formData);
     // TODO: Implement save functionality
   };
 

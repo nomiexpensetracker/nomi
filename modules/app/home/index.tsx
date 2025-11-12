@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppIntro } from '@/lib/hooks/use-intro';
 
@@ -17,8 +16,6 @@ const HomeScreen: React.FC = () => {
   const router = useRouter()
   const { user: { data } } = useStore();
   const { hasSeenIntro, markIntroAsSeen, isLoading } = useAppIntro();
-
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const handleLogout = async () => {
     const supabase = createClient();

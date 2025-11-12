@@ -12,7 +12,7 @@ const SplashScreen: React.FC = () => {
     }, 5000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [router]);
 
   return (
     <div className="min-h-screen bg-[#0047BB] relative overflow-hidden flex items-center justify-center">

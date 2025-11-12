@@ -35,10 +35,10 @@ const FreePlanOverview: React.FC = () => {
           {/* Header */}
           <div className="text-center">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              You're on the Free Plan 🎉
+              You&apos;re on the Free Plan 🎉
             </h1>
             <p className="text-gray-600">
-              Here's what you get with your current plan:
+              Here&apos;s what you get with your current plan:
             </p>
           </div>
 

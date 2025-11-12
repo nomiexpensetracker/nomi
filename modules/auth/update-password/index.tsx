@@ -65,7 +65,7 @@ const UpdatePassword: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [password, router]);
+  }, [password, router, handleResetCaptcha, handleVerifyCaptcha, captchaToken, confirmPassword]);
 
   return (
     <div className="min-h-dvh bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col justify-center py-4 px-6">

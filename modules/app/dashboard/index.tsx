@@ -1,23 +1,21 @@
 'use client'
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { useStore } from '@/lib/stores';
 import { createClient } from '@/lib/supabase/client';
+import { useAppContext } from '@/lib/contexts/app-provider';
 
 import ExpensesTabs from '@/components/organisms/expense-tabs';
 import UserOverview from '@/components/organisms/user-overview';
 import ExpenseChart from '@/components/organisms/expense-chart';
 import LoadingScreen from '@/components/organisms/loading-screen';
-import AddExpenseModal from '@/components/organisms/add-expense-modal';
 
 const Dashboard: React.FC = () => {
   const router = useRouter();
 
+  const { isAppLoading } = useAppContext();
   const { user: { data } } = useStore();
-
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogout = async () => {
     const supabase = createClient();
@@ -26,7 +24,7 @@ const Dashboard: React.FC = () => {
     router.push('/')
   };
 
-  if (isLoading) {
+  if (isAppLoading) {
     return <LoadingScreen />
   }
 

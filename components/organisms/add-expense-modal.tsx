@@ -25,15 +25,6 @@ const AddExpenseModal: React.FC<AddExpenseModalProps> = ({ isOpen, onClose }) =>
       return;
     }
 
-    //! TODO - use hooks to add expense to database
-    console.log('AddExpenseModal', {
-      title: title.trim(),
-      amount: parseFloat(amount),
-      category,
-      date,
-      notes: notes.trim() || undefined,
-    });
-
     // Reset form
     setTitle('');
     setAmount('');

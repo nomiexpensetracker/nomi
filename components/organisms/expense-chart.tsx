@@ -37,7 +37,6 @@ const ExpenseChart: React.FC<ExpenseChartProps> = ({ expenses }) => {
   };
 
   const data = getLast6MonthsData();
-  const maxValue = Math.max(...data.map(d => d.total), 1);
 
   return (
     <Card className="mx-6 my-6 p-6 shadow-sm border-0">

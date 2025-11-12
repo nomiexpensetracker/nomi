@@ -1,51 +1,55 @@
-import { NextResponse } from 'next/server'
+import { NextResponse } from "next/server";
 
 interface HCaptchaRequest {
-  token: string
+  token: string;
 }
 
 interface HCaptchaResponse {
-  success: boolean
-  challenge_ts?: string
-  credit?: boolean
-  hostname?: string
-  'error-codes'?: string[]
+  success: boolean;
+  challenge_ts?: string;
+  credit?: boolean;
+  hostname?: string;
+  "error-codes"?: string[];
 }
 
 export async function POST(req: Request) {
-  const { token } = (await req.json()) as HCaptchaRequest
-  const HCAPTCHA_SECRET_KEY = process.env.HCAPTCHA_SECRET_KEY || ''
+  const { token } = (await req.json()) as HCaptchaRequest;
+  const HCAPTCHA_SECRET_KEY = process.env.HCAPTCHA_SECRET_KEY || "";
 
   if (!token) {
-    return NextResponse.json({ success: false, message: 'No token provided' }, { status: 400 })
+    return NextResponse.json(
+      { success: false, message: "No token provided" },
+      { status: 400 },
+    );
   }
 
   try {
-    const response = await fetch('https://api.hcaptcha.com/siteverify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    const response = await fetch("https://api.hcaptcha.com/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
         secret: HCAPTCHA_SECRET_KEY,
         response: token,
       }),
-    })
+    });
 
-    const data = (await response.json()) as HCaptchaResponse
-    console.log('hCaptcha verify result:', JSON.stringify(data, null, 2))
+    const data = (await response.json()) as HCaptchaResponse;
 
     if (!data.success) {
-      throw new Error(JSON.stringify(data))
+      throw new Error(JSON.stringify(data));
     }
 
-    return NextResponse.json({ success: true, message: 'Captcha verification success.' })
+    return NextResponse.json({
+      success: true,
+      message: "Captcha verification success.",
+    });
   } catch (error) {
-    console.error('hCaptcha verification failed:', error)
     return NextResponse.json(
       {
         success: false,
         message: `Captcha verification failed: ${error instanceof Error ? error.message : String(error)}`,
       },
       { status: 500 },
-    )
+    );
   }
 }

@@ -1,5 +1,4 @@
 import HCaptcha from '@hcaptcha/react-hcaptcha'
-import { useLocale } from 'next-intl'
 import { useCallback, useRef, useState } from 'react'
 
 import { CommonResponse } from '@/types/common'
@@ -16,9 +15,6 @@ interface UseCaptchaResult {
 }
 
 const useCaptcha = (): UseCaptchaResult => {
-  const hostUrl = process.env.NEXT_PUBLIC_APP_HOSTNAME || ''
-
-  const locale = useLocale()
   const captchaRef = useRef<HCaptcha | null>(null)
 
   const [captchaToken, setCaptchaToken] = useState<string | null>(null)
@@ -57,7 +53,7 @@ const useCaptcha = (): UseCaptchaResult => {
       setLoadingVerifyCaptcha(false)
       return false
     }
-  }, [locale, captchaToken, hostUrl, handleResetCaptcha, toast])
+  }, [captchaToken, handleResetCaptcha])
 
   return {
     captchaRef,
